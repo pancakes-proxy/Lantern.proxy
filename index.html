@@ -39,9 +39,25 @@
             const password = document.getElementById('password').value;
             const storedPassword = localStorage.getItem(username);
 
+            const signInBlocked = localStorage.getItem('signInBlocked') === 'true';
+            const userBanned = localStorage.getItem(`${username}_banned`) === 'true';
+
+            if (signInBlocked && username !== 'admin') {
+                alert('Sign-ins are currently blocked by the admin.');
+                return;
+            }
+
+            if (userBanned) {
+                alert('You have been banned by the admin.');
+                return;
+            }
+
             if (storedPassword && storedPassword === password) {
-                localStorage.setItem('currentUser', username);
-                window.location.href = 'home.html';
+                if (username === 'admin') {
+                    window.location.href = 'moderation.html';
+                } else {
+                    window.location.href = 'home.html';
+                }
             } else {
                 alert('Invalid username or password');
             }
