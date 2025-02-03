@@ -39,6 +39,9 @@
             font-size: 1em;
             margin: 5px;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -53,28 +56,46 @@
     </div>
     <div class="content">
         <h1>Moderation Panel</h1>
-        <div class="form-group">
-            <input type="text" id="newUsername" placeholder="New Username">
-            <input type="password" id="newPassword" placeholder="New Password">
-            <button onclick="addUser()">Add User</button>
+        <div id="adminLogin" class="form-group">
+            <input type="password" id="moderationPassword" placeholder="Moderation Password">
+            <button onclick="checkModerationPassword()">Enter</button>
         </div>
-        <div class="form-group">
-            <input type="text" id="deleteUsername" placeholder="Username to Delete">
-            <button onclick="deleteUser()">Delete User</button>
-        </div>
-        <div class="form-group">
-            <input type="text" id="banUsername" placeholder="Username to Ban">
-            <button onclick="banUser()">Ban User</button>
-            <input type="text" id="unbanUsername" placeholder="Username to Unban">
-            <button onclick="unbanUser()">Unban User</button>
-        </div>
-        <div class="form-group">
-            <button onclick="blockSignIns()">Block All Sign-Ins</button>
-            <button onclick="unblockSignIns()">Unblock All Sign-Ins</button>
+        <div id="moderationContent" class="hidden">
+            <div class="form-group">
+                <input type="text" id="newUsername" placeholder="New Username">
+                <input type="password" id="newPassword" placeholder="New Password">
+                <button onclick="addUser()">Add User</button>
+            </div>
+            <div class="form-group">
+                <input type="text" id="deleteUsername" placeholder="Username to Delete">
+                <button onclick="deleteUser()">Delete User</button>
+            </div>
+            <div class="form-group">
+                <input type="text" id="banUsername" placeholder="Username to Ban">
+                <button onclick="banUser()">Ban User</button>
+                <input type="text" id="unbanUsername" placeholder="Username to Unban">
+                <button onclick="unbanUser()">Unban User</button>
+            </div>
+            <div class="form-group">
+                <button onclick="blockSignIns()">Block All Sign-Ins</button>
+                <button onclick="unblockSignIns()">Unblock All Sign-Ins</button>
+            </div>
         </div>
     </div>
 
     <script>
+        const MODERATION_PASSWORD = 'zaxc1122';
+
+        function checkModerationPassword() {
+            const password = document.getElementById('moderationPassword').value;
+            if (password === MODERATION_PASSWORD) {
+                document.getElementById('adminLogin').classList.add('hidden');
+                document.getElementById('moderationContent').classList.remove('hidden');
+            } else {
+                alert('Incorrect moderation password');
+            }
+        }
+
         function addUser() {
             const username = document.getElementById('newUsername').value;
             const password = document.getElementById('newPassword').value;
@@ -92,7 +113,6 @@
 
             if (username) {
                 localStorage.removeItem(username);
-                localStorage.removeItem(`${username}_banned`);
                 alert('User deleted successfully');
             } else {
                 alert('Please enter the username');
@@ -101,23 +121,27 @@
 
         function banUser() {
             const username = document.getElementById('banUsername').value;
+            let bannedUsers = JSON.parse(localStorage.getItem('bannedUsers')) || [];
 
-            if (username) {
-                localStorage.setItem(`${username}_banned`, 'true');
+            if (username && !bannedUsers.includes(username)) {
+                bannedUsers.push(username);
+                localStorage.setItem('bannedUsers', JSON.stringify(bannedUsers));
                 alert('User banned successfully');
             } else {
-                alert('Please enter the username');
+                alert('Please enter a valid username');
             }
         }
 
         function unbanUser() {
             const username = document.getElementById('unbanUsername').value;
+            let bannedUsers = JSON.parse(localStorage.getItem('bannedUsers')) || [];
 
-            if (username) {
-                localStorage.removeItem(`${username}_banned`);
+            if (username && bannedUsers.includes(username)) {
+                bannedUsers = bannedUsers.filter(user => user !== username);
+                localStorage.setItem('bannedUsers', JSON.stringify(bannedUsers));
                 alert('User unbanned successfully');
             } else {
-                alert('Please enter the username');
+                alert('Please enter a valid username');
             }
         }
 
@@ -127,7 +151,7 @@
         }
 
         function unblockSignIns() {
-            localStorage.removeItem('signInBlocked');
+            localStorage.setItem('signInBlocked', 'false');
             alert('All sign-ins are now unblocked');
         }
     </script>
