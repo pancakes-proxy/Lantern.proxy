@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderation Panel - Lantern Proxy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #ccc; /* Gray background */
+        }
+        .top-bar {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: right;
+        }
+        .menu {
+            float: left;
+            text-align: left;
+        }
+        .menu a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .content {
+            margin-top: 20px;
+        }
+        .user-list, .add-user-form {
+            margin: 20px 0;
+        }
+        input {
+            margin: 5px;
+            padding: 10px;
+            font-size: 1em;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="menu">
+            <a href="home.html">Home</a>
+            <a href="games.html">Games</a>
+            <a href="apps.html">Apps</a>
+            <a href="settings.html">Settings</a>
+            <a href="moderation.html" id="moderation-link" style="display:none;">Moderation Panel</a>
+        </div>
+        <span>lantern.proxy</span>
+    </div>
+    <div class="content">
+        <h1>Moderation Panel</h1>
+        <div class="user-list">
+            <h2>Users</h2>
+            <ul id="user-list"></ul>
+        </div>
+        <div class="add-user-form">
+            <h2>Add User</h2>
+            <input type="text" id="new-username" placeholder="Username" required>
+            <input type="password" id="new-password" placeholder="Password" required>
+            <button onclick="addUser()">Add User</button>
+        </div>
+        <div class="delete-user-form">
+            <h2>Delete User</h2>
+            <input type="text" id="delete-username" placeholder="Username" required>
+            <button onclick="deleteUser()">Delete User</button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser === 'admin') {
+                document.getElementById('moderation-link').style.display = 'block';
+                loadUsers();
+            } else {
+                alert('Access Denied');
+                window.location.href = 'home.html';
+            }
+        });
+
+        function loadUsers() {
+            const userList = document.getElementById('user-list');
+            userList.innerHTML = '';
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key !== 'currentUser') {
+                    const li = document.createElement('li');
+                    li.textContent = key;
+                    userList.appendChild(li);
+                }
+            }
+        }
+
+        function addUser() {
+            const username = document.getElementById('new-username').value;
+            const password = document.getElementById('new-password').value;
+            if (username && password) {
+                localStorage.setItem(username, password);
+                loadUsers();
+            }
+        }
+
+        function deleteUser() {
+            const username = document.getElementById('delete-username').value;
+            if (username && localStorage.getItem(username)) {
+                localStorage.removeItem(username);
+                loadUsers();
+            }
+        }
+    </script>
+</body>
+</html>
