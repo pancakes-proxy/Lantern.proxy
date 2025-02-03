@@ -96,12 +96,14 @@
         async function addUser() {
             const username = document.getElementById('newUsername').value;
             const password = document.getElementById('newPassword').value;
+            const email = `${username}@lantern.learnhelp.cc`;
 
             if (username && password) {
-                let { error } = await supabase
-                    .from('users')
-                    .insert([{ username: username, password: password, isBanned: false }]);
-                
+                let { user, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password
+                });
+
                 if (error) {
                     alert('Error adding user: ' + error.message);
                 } else {
@@ -114,12 +116,10 @@
 
         async function deleteUser() {
             const username = document.getElementById('deleteUsername').value;
+            const email = `${username}@lantern.learnhelp.cc`;
 
             if (username) {
-                let { error } = await supabase
-                    .from('users')
-                    .delete()
-                    .eq('username', username);
+                let { error } = await supabase.auth.api.deleteUserByEmail(email);
 
                 if (error) {
                     alert('Error deleting user: ' + error.message);
@@ -133,6 +133,8 @@
 
         async function banUser() {
             const username = document.getElementById('banUsername').value;
+            const email = `${username}@lantern.learnhelp.cc`;
 
             if (username) {
-                let {[_{{{CITATION{{{_1{](https://github.com/buribalazs/smooth-drag-order/tree/7b40d21d076c3e31765f61481f537beaf4c5ec9f/README.md)
+                const { data, error } = await supabase
+                    .from('banned_users[_{{{CITATION{{{_1{](https://github.com/buribalazs/smooth-drag-order/tree/7b40d21d076c3e31765f61481f537beaf4c5ec9f/README.md)
