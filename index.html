@@ -2,51 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lantern Proxy - Login</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            background-color: #ccc; /* Gray background */
-        }
-        .login-form {
-            margin-top: 100px;
-        }
-        .login-form input {
-            margin: 5px;
-            padding: 10px;
-            font-size: 1em;
-        }
-        .login-form button {
-            padding: 10px 20px;
-            font-size: 1em;
-        }
+        /* [Your existing styles] */
     </style>
 </head>
 <body>
     <div class="login-form" id="login-form">
         <h2>Sign In</h2>
-        <input type="text" id="username" placeholder="Username" required>
-        <input type="password" id="password" placeholder="Password" required>
+        <input type="text" id="username" placeholder="Username" required />
+        <input type="password" id="password" placeholder="Password" required />
         <button onclick="signIn()">Sign In</button>
     </div>
     <script src="https://unpkg.com/@supabase/supabase-js"></script>
     <script>
         const supabaseUrl = 'https://foklbwyrcnujwottmha.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZva2xid3lyY251andvdHR0bWhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg2MTc0ODgsImV4cCI6MjA1NDE5MzQ4OH0.9iYYphIlwrBQcTq5HKMiJ6ho6VNI3AXqbRUbNPRa0RU';
+        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY'; // Replace with your anon key
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         async function signIn() {
-            const username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             const email = `${username}@lantern.learnhelp.cc`;
 
-            let { user, error } = await supabase.auth.signIn({
+            const { user, error } = await supabase.auth.signIn({
                 email: email,
-                password: password
+                password: password,
             });
 
             if (error) {
@@ -54,9 +35,26 @@
                 return;
             }
 
-            // Create a token and store it in local storage
-            const token = generateToken(username);
-            localStorage.setItem('token', token);
+            // Check if the user is banned
+            const { data: profile, error: profileError } = await supabase
+                .from('profiles')
+                .select('is_banned')
+                .eq('id', user.id)
+                .single();
+
+            if (profileError) {
+                alert('Error fetching user profile: ' + profileError.message);
+                return;
+            }
+
+            if (profile.is_banned) {
+                alert('Your account has been banned.');
+                await supabase.auth.signOut();
+                return;
+            }
+
+            // Store session
+            localStorage.setItem('supabase.auth.token', JSON.stringify(supabase.auth.session()));
 
             if (username === 'admin') {
                 window.location.href = 'moderation.html';
@@ -64,30 +62,6 @@
                 window.location.href = 'home.html';
             }
         }
-
-        function generateToken(username) {
-            // Simple token generation for demo purposes. Replace with a proper token generation method.
-            return btoa(`${username}:${new Date().getTime()}`);
-        }
-
-        async function addAdminUser() {
-            let { data, error } = await supabase.auth.api.getUsers();
-
-            if (!data.find(user => user.email === 'admin@lantern.learnhelp.cc')) {
-                let { user, error } = await supabase.auth.signUp({
-                    email: 'admin@lantern.learnhelp.cc',
-                    password: 'zaxc1122'
-                });
-
-                if (error) {
-                    console.error('Error adding admin user:', error);
-                } else {
-                    console.log('Admin user added successfully');
-                }
-            }
-        }
-
-        addAdminUser();
     </script>
 </body>
 </html>
