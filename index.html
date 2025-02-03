@@ -55,6 +55,10 @@
             }
 
             if (user && user.password === password) {
+                // Create a token and store it in local storage
+                const token = generateToken(username);
+                localStorage.setItem('token', token);
+                
                 if (username === 'admin') {
                     window.location.href = 'moderation.html';
                 } else {
@@ -63,6 +67,11 @@
             } else {
                 alert('Invalid username or password');
             }
+        }
+
+        function generateToken(username) {
+            // Simple token generation for demo purposes. Replace with a proper token generation method.
+            return btoa(`${username}:${new Date().getTime()}`);
         }
 
         async function addAdminUser() {
