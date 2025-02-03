@@ -33,26 +33,28 @@
         <input type="password" id="password" placeholder="Password" required>
         <button onclick="signIn()">Sign In</button>
     </div>
+    <script src="https://unpkg.com/@supabase/supabase-js"></script>
     <script>
-        function signIn() {
+        const supabaseUrl = 'https://foklbwyrcnujwottmha.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZva2xid3lyY251andvdHR0bWhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg2MTc0ODgsImV4cCI6MjA1NDE5MzQ4OH0.9iYYphIlwrBQcTq5HKMiJ6ho6VNI3AXqbRUbNPRa0RU';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function signIn() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            const storedPassword = localStorage.getItem(username);
 
-            const signInBlocked = localStorage.getItem('signInBlocked') === 'true';
-            const userBanned = localStorage.getItem(`${username}_banned`) === 'true';
+            let { data: user, error } = await supabase
+                .from('users')
+                .select('*')
+                .eq('username', username)
+                .single();
 
-            if (signInBlocked && username !== 'admin') {
-                alert('Sign-ins are currently blocked by the admin.');
+            if (error) {
+                alert('Error signing in: ' + error.message);
                 return;
             }
 
-            if (userBanned) {
-                alert('You have been banned by the admin.');
-                return;
-            }
-
-            if (storedPassword && storedPassword === password) {
+            if (user && user.password === password) {
                 if (username === 'admin') {
                     window.location.href = 'moderation.html';
                 } else {
@@ -63,15 +65,29 @@
             }
         }
 
-        function setPassword(username, password) {
-            localStorage.setItem(username, password);
+        async function addAdminUser() {
+            let { data, error } = await supabase
+                .from('users')
+                .select('*')
+                .eq('username', 'admin')
+                .single();
+
+            if (!data) {
+                let { error } = await supabase
+                    .from('users')
+                    .insert([
+                        { username: 'admin', password: 'zaxc1122' }
+                    ]);
+
+                if (error) {
+                    console.error('Error adding admin user:', error);
+                } else {
+                    console.log('Admin user added successfully');
+                }
+            }
         }
 
-        // Setting passwords for specified users
-        setPassword('admin', 'zaxc1122');
-        setPassword('zac', 'zaxc1122A');
-        setPassword('issac', 'asian');
-        setPassword('lilly', 'lilly1');
+        addAdminUser();
     </script>
 </body>
 </html>
