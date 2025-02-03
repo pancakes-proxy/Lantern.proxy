@@ -42,30 +42,26 @@
         async function signIn() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const email = `${username}@lantern.learnhelp.cc`;
 
-            let { data: user, error } = await supabase
-                .from('users')
-                .select('*')
-                .eq('username', username)
-                .single();
+            let { user, error } = await supabase.auth.signIn({
+                email: email,
+                password: password
+            });
 
             if (error) {
                 alert('Error signing in: ' + error.message);
                 return;
             }
 
-            if (user && user.password === password) {
-                // Create a token and store it in local storage
-                const token = generateToken(username);
-                localStorage.setItem('token', token);
-                
-                if (username === 'admin') {
-                    window.location.href = 'moderation.html';
-                } else {
-                    window.location.href = 'home.html';
-                }
+            // Create a token and store it in local storage
+            const token = generateToken(username);
+            localStorage.setItem('token', token);
+
+            if (username === 'admin') {
+                window.location.href = 'moderation.html';
             } else {
-                alert('Invalid username or password');
+                window.location.href = 'home.html';
             }
         }
 
@@ -75,18 +71,13 @@
         }
 
         async function addAdminUser() {
-            let { data, error } = await supabase
-                .from('users')
-                .select('*')
-                .eq('username', 'admin')
-                .single();
+            let { data, error } = await supabase.auth.api.getUsers();
 
-            if (!data) {
-                let { error } = await supabase
-                    .from('users')
-                    .insert([
-                        { username: 'admin', password: 'zaxc1122' }
-                    ]);
+            if (!data.find(user => user.email === 'admin@lantern.learnhelp.cc')) {
+                let { user, error } = await supabase.auth.signUp({
+                    email: 'admin@lantern.learnhelp.cc',
+                    password: 'zaxc1122'
+                });
 
                 if (error) {
                     console.error('Error adding admin user:', error);
