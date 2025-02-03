@@ -31,17 +31,13 @@
         .content {
             margin-top: 20px;
         }
-        .user-list, .add-user-form {
-            margin: 20px 0;
+        .form-group {
+            margin: 10px 0;
         }
-        input {
-            margin: 5px;
+        .form-group input, .form-group button {
             padding: 10px;
             font-size: 1em;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 1em;
+            margin: 5px;
         }
     </style>
 </head>
@@ -52,68 +48,58 @@
             <a href="games.html">Games</a>
             <a href="apps.html">Apps</a>
             <a href="settings.html">Settings</a>
-            <a href="moderation.html" id="moderation-link" style="display:none;">Moderation Panel</a>
         </div>
         <span>lantern.proxy</span>
     </div>
     <div class="content">
         <h1>Moderation Panel</h1>
-        <div class="user-list">
-            <h2>Users</h2>
-            <ul id="user-list"></ul>
-        </div>
-        <div class="add-user-form">
-            <h2>Add User</h2>
-            <input type="text" id="new-username" placeholder="Username" required>
-            <input type="password" id="new-password" placeholder="Password" required>
+        <div class="form-group">
+            <input type="text" id="newUsername" placeholder="New Username">
+            <input type="password" id="newPassword" placeholder="New Password">
             <button onclick="addUser()">Add User</button>
         </div>
-        <div class="delete-user-form">
-            <h2>Delete User</h2>
-            <input type="text" id="delete-username" placeholder="Username" required>
+        <div class="form-group">
+            <input type="text" id="deleteUsername" placeholder="Username to Delete">
             <button onclick="deleteUser()">Delete User</button>
         </div>
+        <div class="form-group">
+            <button onclick="blockSignIns()">Block All Sign-Ins</button>
+            <button onclick="unblockSignIns()">Unblock All Sign-Ins</button>
+        </div>
     </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const currentUser = localStorage.getItem('currentUser');
-            if (currentUser === 'admin') {
-                document.getElementById('moderation-link').style.display = 'block';
-                loadUsers();
-            } else {
-                alert('Access Denied');
-                window.location.href = 'home.html';
-            }
-        });
-
-        function loadUsers() {
-            const userList = document.getElementById('user-list');
-            userList.innerHTML = '';
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key !== 'currentUser') {
-                    const li = document.createElement('li');
-                    li.textContent = key;
-                    userList.appendChild(li);
-                }
-            }
-        }
-
         function addUser() {
-            const username = document.getElementById('new-username').value;
-            const password = document.getElementById('new-password').value;
+            const username = document.getElementById('newUsername').value;
+            const password = document.getElementById('newPassword').value;
+
             if (username && password) {
                 localStorage.setItem(username, password);
-                loadUsers();
+                alert('User added successfully');
+            } else {
+                alert('Please enter both username and password');
             }
         }
 
         function deleteUser() {
-            const username = document.getElementById('delete-username').value;
-            if (username && localStorage.getItem(username)) {
+            const username = document.getElementById('deleteUsername').value;
+
+            if (username) {
                 localStorage.removeItem(username);
-                loadUsers();
+                alert('User deleted successfully');
+            } else {
+                alert('Please enter the username');
             }
+        }
+
+        function blockSignIns() {
+            localStorage.setItem('signInBlocked', 'true');
+            alert('All sign-ins are now blocked');
+        }
+
+        function unblockSignIns() {
+            localStorage.removeItem('signInBlocked');
+            alert('All sign-ins are now unblocked');
         }
     </script>
 </body>
