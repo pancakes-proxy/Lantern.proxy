@@ -39,9 +39,6 @@
             font-size: 1em;
             margin: 5px;
         }
-        .hidden {
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -56,24 +53,26 @@
     </div>
     <div class="content">
         <h1>Moderation Panel</h1>
-        <div id="adminLogin" class="form-group">
-            <input type="password" id="moderationPassword" placeholder="Moderation Password">
-            <button onclick="checkModerationPassword()">Enter</button>
+        <div class="form-group">
+            <input type="password" id="moderationPassword" placeholder="Enter Moderation Password" required>
+            <button onclick="verifyModerationPassword()">Enter</button>
         </div>
-        <div id="moderationContent" class="hidden">
+        <div class="moderation-content" style="display:none;">
             <div class="form-group">
-                <input type="text" id="newUsername" placeholder="New Username">
-                <input type="password" id="newPassword" placeholder="New Password">
+                <input type="text" id="newUsername" placeholder="New User Username">
+                <input type="password" id="newPassword" placeholder="New User Password">
                 <button onclick="addUser()">Add User</button>
             </div>
             <div class="form-group">
-                <input type="text" id="deleteUsername" placeholder="Username to Delete">
+                <input type="text" id="deleteUsername" placeholder="User Username to Delete">
                 <button onclick="deleteUser()">Delete User</button>
             </div>
             <div class="form-group">
-                <input type="text" id="banUsername" placeholder="Username to Ban">
+                <input type="text" id="banUsername" placeholder="User Username to Ban">
                 <button onclick="banUser()">Ban User</button>
-                <input type="text" id="unbanUsername" placeholder="Username to Unban">
+            </div>
+            <div class="form-group">
+                <input type="text" id="unbanUsername" placeholder="User Username to Unban">
                 <button onclick="unbanUser()">Unban User</button>
             </div>
             <div class="form-group">
@@ -83,77 +82,62 @@
         </div>
     </div>
 
+    <script src="https://unpkg.com/@supabase/supabase-js"></script>
     <script>
-        const MODERATION_PASSWORD = 'zaxc1122';
+        const supabaseUrl = 'https://foklbwyrcnujwottmha.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZva2xid3lyY251andvdHR0bWhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg2MTc0ODgsImV4cCI6MjA1NDE5MzQ4OH0.9iYYphIlwrBQcTq5HKMiJ6ho6VNI3AXqbRUbNPRa0RU';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        function checkModerationPassword() {
-            const password = document.getElementById('moderationPassword').value;
-            if (password === MODERATION_PASSWORD) {
-                document.getElementById('adminLogin').classList.add('hidden');
-                document.getElementById('moderationContent').classList.remove('hidden');
+        function verifyModerationPassword() {
+            const enteredPassword = document.getElementById('moderationPassword').value;
+            if (enteredPassword === 'zaxc1122') {
+                document.querySelector('.moderation-content').style.display = 'block';
+                document.querySelector('.form-group').style.display = 'none';
             } else {
-                alert('Incorrect moderation password');
+                alert('Invalid moderation password');
             }
         }
 
-        function addUser() {
+        async function addUser() {
             const username = document.getElementById('newUsername').value;
             const password = document.getElementById('newPassword').value;
 
             if (username && password) {
-                localStorage.setItem(username, password);
-                alert('User added successfully');
+                let { error } = await supabase
+                    .from('users')
+                    .insert([{ username: username, password: password, isBanned: false }]);
+                
+                if (error) {
+                    alert('Error adding user: ' + error.message);
+                } else {
+                    alert('User added successfully');
+                }
             } else {
                 alert('Please enter both username and password');
             }
         }
 
-        function deleteUser() {
+        async function deleteUser() {
             const username = document.getElementById('deleteUsername').value;
 
             if (username) {
-                localStorage.removeItem(username);
-                alert('User deleted successfully');
+                let { error } = await supabase
+                    .from('users')
+                    .delete()
+                    .eq('username', username);
+
+                if (error) {
+                    alert('Error deleting user: ' + error.message);
+                } else {
+                    alert('User deleted successfully');
+                }
             } else {
                 alert('Please enter the username');
             }
         }
 
-        function banUser() {
+        async function banUser() {
             const username = document.getElementById('banUsername').value;
-            let bannedUsers = JSON.parse(localStorage.getItem('bannedUsers')) || [];
 
-            if (username && !bannedUsers.includes(username)) {
-                bannedUsers.push(username);
-                localStorage.setItem('bannedUsers', JSON.stringify(bannedUsers));
-                alert('User banned successfully');
-            } else {
-                alert('Please enter a valid username');
-            }
-        }
-
-        function unbanUser() {
-            const username = document.getElementById('unbanUsername').value;
-            let bannedUsers = JSON.parse(localStorage.getItem('bannedUsers')) || [];
-
-            if (username && bannedUsers.includes(username)) {
-                bannedUsers = bannedUsers.filter(user => user !== username);
-                localStorage.setItem('bannedUsers', JSON.stringify(bannedUsers));
-                alert('User unbanned successfully');
-            } else {
-                alert('Please enter a valid username');
-            }
-        }
-
-        function blockSignIns() {
-            localStorage.setItem('signInBlocked', 'true');
-            alert('All sign-ins are now blocked');
-        }
-
-        function unblockSignIns() {
-            localStorage.setItem('signInBlocked', 'false');
-            alert('All sign-ins are now unblocked');
-        }
-    </script>
-</body>
-</html>
+            if (username) {
+                let { error[_{{{CITATION{{{_1{](https://github.com/buribalazs/smooth-drag-order/tree/7b40d21d076c3e31765f61481f537beaf4c5ec9f/README.md)
