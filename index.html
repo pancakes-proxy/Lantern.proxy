@@ -1,0 +1,61 @@
+/* login code */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lantern Proxy - Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #ccc; /* Gray background */
+        }
+        .login-form {
+            margin-top: 100px;
+        }
+        .login-form input {
+            margin: 5px;
+            padding: 10px;
+            font-size: 1em;
+        }
+        .login-form button {
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-form" id="login-form">
+        <h2>Sign In</h2>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button onclick="signIn()">Sign In</button>
+    </div>
+    <script>
+        function signIn() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const storedPassword = localStorage.getItem(username);
+
+            if (storedPassword && storedPassword === password) {
+                window.location.href = 'home.html';
+            } else {
+                alert('Invalid username or password');
+            }
+        }
+
+        function setPassword(username, password) {
+            localStorage.setItem(username, password);
+        }
+
+        // Setting passwords for specified users
+        setPassword('admin', 'zaxc1122');
+        setPassword('zac', 'zaxc1122A');
+        setPassword('issac', 'asian');
+        setPassword('lilly', 'lilly1');
+    </script>
+</body>
+</html>
