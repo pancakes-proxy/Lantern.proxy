@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <title>Home - Lantern Proxy</title>
     <style>
         body {
@@ -46,7 +45,7 @@
             <a href="games.html">Games</a>
             <a href="apps.html">Apps</a>
             <a href="settings.html">Settings</a>
-            <a href="chat.html">Chat</a>
+            <a href="moderation.html" id="moderation-link" style="display:none;">Moderation Panel</a>
         </div>
         <span>lantern.proxy</span>
     </div>
@@ -54,5 +53,13 @@
         <h1>lantern.proxy</h1>
         <div class="powered-by">powered by ultraviolet</div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser === 'admin') {
+                document.getElementById('moderation-link').style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>
