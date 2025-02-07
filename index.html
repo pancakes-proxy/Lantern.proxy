@@ -8,60 +8,13 @@
     </style>
 </head>
 <body>
-    <div class="login-form" id="login-form">
-        <h2>Sign In</h2>
-        <input type="text" id="username" placeholder="Username" required />
-        <input type="password" id="password" placeholder="Password" required />
-        <button onclick="signIn()">Sign In</button>
-    </div>
-    <script src="https://unpkg.com/@supabase/supabase-js"></script>
     <script>
-        const supabaseUrl = 'https://foklbwyrcnujwottmha.supabase.co';
-        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY'; // Replace with your anon key
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-        async function signIn() {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const email = `${username}@lantern.learnhelp.cc`;
-
-            const { user, error } = await supabase.auth.signIn({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                alert('Error signing in: ' + error.message);
-                return;
-            }
-
-            // Check if the user is banned
-            const { data: profile, error: profileError } = await supabase
-                .from('profiles')
-                .select('is_banned')
-                .eq('id', user.id)
-                .single();
-
-            if (profileError) {
-                alert('Error fetching user profile: ' + profileError.message);
-                return;
-            }
-
-            if (profile.is_banned) {
-                alert('Your account has been banned.');
-                await supabase.auth.signOut();
-                return;
-            }
-
-            // Store session
-            localStorage.setItem('supabase.auth.token', JSON.stringify(supabase.auth.session()));
-
-            if (username === 'admin') {
-                window.location.href = 'moderation.html';
+    function checkPMS() {
+            var password = prompt("Please enter the AID:");
+            if (password === "WPMSPROXY111") {
+                window.location.href = "https://lantern.learnhelp.cc/home
             } else {
-                window.location.href = 'home.html';
+                alert("Incorrect password. Please try again.");
             }
         }
-    </script>
-</body>
-</html>
+</script>
