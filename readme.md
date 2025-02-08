@@ -1,5 +1,4 @@
-Lantern Proxy
-V1
+
 how to deploy 
 1- vist ``learnhelp.cc`` and get your AID as it will be needed for testing
 2- fork the repo
