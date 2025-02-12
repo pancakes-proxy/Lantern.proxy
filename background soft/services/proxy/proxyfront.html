@@ -1,0 +1,43 @@
+ <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #ccc; /* Gray background */
+        }
+        .top-bar {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: right;
+        }
+        .menu {
+            float: left;
+            text-align: left;
+        }
+        .menu a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .content {
+            margin-top: 20px;
+        }
+        .powered-by {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+    <!DOCTYPE html>
+<body>
+    <h1>Lantern Proxy V1</h1>
+    <form action="/browse" method="post">
+        <label for="url">Enter URL:</label>
+        <input type="text" id="url" name="url" required>
+        <button type="submit">Browse</button>
+    </form>
+</body>
+</html>
