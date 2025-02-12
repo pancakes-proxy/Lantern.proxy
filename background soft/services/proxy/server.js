@@ -10,7 +10,7 @@ const proxy = httpProxy.createProxyServer({});
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'proxyfront.html'));
 });
 
 app.post('/browse', (req, res) => {
