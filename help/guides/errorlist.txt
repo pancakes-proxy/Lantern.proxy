@@ -1,0 +1,10 @@
+(ERR-001) Lantern dev team has shut down web services
+(ERR-002) IP has been banned for missue - contact help@staffteam.learnhelp.cc for help
+(ERR-003) failed test ping from "learnhelp.cc"
+(ERR-004) failed test ping to "learnhelp.cc"
+(ERR-005) AID invallid
+(ERR-006) failure to run backround services
+(ERR-007) non-existent IP/Domain
+(ERR-008) restriced
+(ERR-009) closed connection
+(ERR-010) unsupported site
