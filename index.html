@@ -30,9 +30,8 @@ alert("site has been secured due to the risk of getting leaked/a hacking attempt
        <script>
 user credentials
         const users = {
-            "admin": "bestPMSproxy",
-            "user1": "password1",
-            "user2": "password2"
+            "admin": "zaxc1122@A",
+            "zac": "zaxc1122"
         };
 
         function donate() {
@@ -45,7 +44,7 @@ user credentials
             let password = prompt("Thanks for donating! Please login here");
             if (username in users && users[username] === password) {
                 if (username === "admin") {
-                    alert("Welcome, Admin!");
+                    alert("Welcome server admin");
                     window.location.href = "https://lantern.learnhelp.cc/admin.html";
                 } else {
                     alert("Welcome, " + username + "!");
