@@ -26,6 +26,34 @@ alert("site has been secured due to the risk of getting leaked/a hacking attempt
    }
 }
 </script>
-     <button onclick="donate()">If donator dont type in password and click hear</button>
+     <button onclick="donate()">If donator dont type in password and click here</button>
+       <script>
+user credentials
+        const users = {
+            "admin": "bestPMSproxy",
+            "user1": "password1",
+            "user2": "password2"
+        };
+
+        function donate() {
+            let username = prompt("Enter your username:", "");
+            if (username == null || username == "") {
+                alert("Username cancelled.");
+                return;
+            }
+
+            let password = prompt("Thanks for donating! Please login here");
+            if (username in users && users[username] === password) {
+                if (username === "admin") {
+                    alert("Welcome, Admin!");
+                    window.location.href = "https://lantern.learnhelp.cc/admin.html";
+                } else {
+                    alert("Welcome, " + username + "!");
+                    window.location.href = "https://lantern.learnhelp.cc/home.html";
+                }
+            } else {
+                alert("Incorrect username or password. Please try again.");
+            }
+</script>
     
     
